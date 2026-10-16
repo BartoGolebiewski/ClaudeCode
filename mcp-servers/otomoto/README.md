@@ -10,7 +10,7 @@ OtoMoto nie ma publicznego API. Serwer czyta dane JSON, które strona osadza w s
 |---|---|
 | `otomoto_search_offers` | Wyszukiwanie z filtrami: marka, model, generacja, cena, rocznik, przebieg, moc, paliwo, nadwozie, skrzynia, stan, typ sprzedawcy. Sortowanie i stronicowanie (32 oferty na stronę). |
 | `otomoto_price_stats` | Statystyki cen (min, p25, mediana, średnia, p75, max) dla próbki najnowszych ofert, w podziale na roczniki i przedziały przebiegu, plus 3 najtańsze oferty. |
-| `otomoto_get_offer` | Szczegóły oferty: dane techniczne, wyposażenie, sprzedawca, opis. |
+| `otomoto_get_offer` | Szczegóły oferty: dane techniczne, wyposażenie, sprzedawca, opis oraz flagi `has_vin` i `has_registration`. Sam VIN OtoMoto pokazuje tylko zalogowanym, więc serwer go nie zwraca. |
 | `otomoto_list_makes` | Lista marek i ich slugów. |
 | `otomoto_list_models` | Modele danej marki z liczbą ofert. |
 | `otomoto_list_generations` | Generacje danego modelu (np. `gen-iv-2019-octavia`). |

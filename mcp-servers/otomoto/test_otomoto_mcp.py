@@ -102,7 +102,11 @@ class ParseTest(unittest.TestCase):
             "id": "9",
             "title": "Skoda",
             "price": {"value": "54900", "currency": "PLN", "labels": []},
-            "details": [{"label": "Przebieg", "value": "169 000 km"}],
+            "details": [
+                {"key": "mileage", "label": "Przebieg", "value": "169 000 km"},
+                {"key": "vin", "label": "VIN", "value": "nI1Aaa7b.1.NfcnH=="},
+            ],
+            "parametersDict": {"has_vin": {"values": [{"value": "1"}]}},
             "equipment": [{"label": "Audio", "values": [{"label": "Radio"}]}],
             "seller": {"type": "PRIVATE", "name": "Jan"},
             "images": {"photos": [{}, {}]},
@@ -111,6 +115,8 @@ class ParseTest(unittest.TestCase):
         offer = m.parse_offer({"props": {"pageProps": {"advert": advert}}})
         self.assertEqual(offer["price"], 54900)
         self.assertEqual(offer["details"], {"Przebieg": "169 000 km"})
+        self.assertIs(offer["has_vin"], True)
+        self.assertIsNone(offer["has_registration"])
         self.assertEqual(offer["equipment"], {"Audio": ["Radio"]})
         self.assertEqual(offer["photos"], 2)
         self.assertEqual(offer["description"], "Stan bardzo dobry\nBezwypadkowy")

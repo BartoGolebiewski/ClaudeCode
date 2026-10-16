@@ -458,6 +458,14 @@ def _strip_html(text: str) -> str:
     return re.sub(r"\n{3,}", "\n\n", text).strip()
 
 
+HIDDEN_DETAIL_KEYS = {"vin"}
+
+
+def _flag(advert: dict[str, Any], key: str) -> bool | None:
+    values = ((advert.get("parametersDict") or {}).get(key) or {}).get("values") or []
+    return values[0].get("value") == "1" if values else None
+
+
 def parse_offer(next_data: dict[str, Any]) -> dict[str, Any]:
     advert = next_data.get("props", {}).get("pageProps", {}).get("advert")
     if not advert:
@@ -473,7 +481,14 @@ def parse_offer(next_data: dict[str, Any]) -> dict[str, Any]:
         "currency": price.get("currency"),
         "price_labels": price.get("labels"),
         "created_at": advert.get("createdAt"),
-        "details": {d["label"]: d["value"] for d in advert.get("details") or [] if d.get("label")},
+        "details": {
+            d["label"]: d["value"]
+            for d in advert.get("details") or []
+            if d.get("label") and d.get("key") not in HIDDEN_DETAIL_KEYS
+        },
+        # The VIN itself is only shown to logged-in users; the page carries just a ciphertext.
+        "has_vin": _flag(advert, "has_vin"),
+        "has_registration": _flag(advert, "has_registration"),
         "equipment": {
             group["label"]: [v["label"] for v in group.get("values") or []]
             for group in advert.get("equipment") or []
